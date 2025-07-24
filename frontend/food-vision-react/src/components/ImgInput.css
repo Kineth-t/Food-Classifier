@@ -7,10 +7,10 @@
     margin: 30px;
     border-radius: 25px;
     padding: 10px;
-    background: radial-gradient(circle at center, lightyellow, rgb(251, 223, 170), rgb(250, 164, 164));
+    background: linear-gradient(45deg, white, lightgray, gray);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15)
 }
 
 input {
-
+    padding:10px
 }
