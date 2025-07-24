@@ -1,13 +1,13 @@
 .inputContainer {
-    border: 1px solid;
+    border: 1px solid gray;
     display: flex;
-    flex-direction: column;
+    flex-flow: column wrap;
     justify-content: center;
     align-items: center;
     margin: 30px;
     border-radius: 25px;
     padding: 10px;
-    background: linear-gradient(45deg, white, lightgray, gray);
+    background: linear-gradient(45deg, white, lightgray, rgb(147, 147, 147));
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15)
 }
 
