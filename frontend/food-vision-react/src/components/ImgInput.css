@@ -1,0 +1,16 @@
+.inputContainer {
+    border: 1px solid;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 30px;
+    border-radius: 25px;
+    padding: 10px;
+    background: radial-gradient(circle at center, lightyellow, rgb(251, 223, 170), rgb(250, 164, 164));
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15)
+}
+
+input {
+
+}
