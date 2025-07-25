@@ -18,7 +18,6 @@ function App() {
 				<h5><b>Disclaimer:</b> This model has an accuracy of xx.x% and its just meant to be a fun project that I made</h5>
 			</div>
 			<ImgInput />
-			<Result />
 		</>
 	)
 }
