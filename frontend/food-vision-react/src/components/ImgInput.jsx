@@ -37,10 +37,30 @@ export default function ImgInput() {
 
         const formData = new FormData()
         formData.append('file', imgFile);
+        
+        try {
+        // Use environment variable or fallback to localhost
+        const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+        const response = await fetch(`${API_URL}/predict`, {
+            method: 'POST',
+            body: formData,
+        });
 
-        // try {
-            
-        // }
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        if (result.success) {
+            setPredictions(result.predictions);
+        } else {
+            setError('Prediction failed');
+        }
+        } catch (err) {
+        setError(`Error: ${err.message}. Make sure the FastAPI server is running on localhost:8000`);
+        } finally {
+        setLoading(false);
+        }
     }
 
     return (
@@ -76,7 +96,7 @@ export default function ImgInput() {
                     <span style={{"--letter":12}}>.</span>
                   </div>
                 ) : (
-                  'Identify Food'
+                  ''
                 )}
             </div>
         </>
