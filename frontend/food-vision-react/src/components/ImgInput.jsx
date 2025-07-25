@@ -6,7 +6,7 @@ export default function ImgInput() {
     const [imgFile, setImgFile] = useState(null)
     const [error, setError] = useState(null)
     const [preview, setPreview] = useState(null)
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const fileInputRef = useRef(null);
 
     const handleUploadedFile = (event) => {
@@ -37,7 +37,7 @@ export default function ImgInput() {
 
         const formData = new FormData()
         formData.append('file', imgFile);
-        
+
         try {
         // Use environment variable or fallback to localhost
         const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';

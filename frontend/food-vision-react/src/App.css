@@ -4,7 +4,13 @@
   padding: 10px;
   text-align: center;
   place-items: center;
-  background: linear-gradient(45deg, rgb(255, 230, 0), orange, rgb(222, 81, 81))
+  background: linear-gradient(45deg, rgb(255, 230, 0), orange, rgb(222, 81, 81));
+  font-family: "DynaPuff", system-ui;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
 }
 
 .logo {
