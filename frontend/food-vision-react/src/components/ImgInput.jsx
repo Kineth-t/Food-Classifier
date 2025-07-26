@@ -26,21 +26,21 @@ export default function ImgInput() {
     }
 
     const predictFood = async () => {
-        if (!selectedFile) {
+        if (!imgFile) {
             setError('Please select an image first.')
             return;
         }
 
         setLoading(true);
         setError(null);
-        setPrediction(null);
+        // setPrediction(null);
 
         const formData = new FormData()
         formData.append('file', imgFile);
 
         try {
         // Use environment variable or fallback to localhost
-        const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+        const API_URL = 'http://localhost:8000';
         const response = await fetch(`${API_URL}/predict`, {
             method: 'POST',
             body: formData,
@@ -50,16 +50,19 @@ export default function ImgInput() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
+        console.log(`This is reponse:`, response);
+
         const result = await response.json();
         if (result.success) {
-            setPredictions(result.predictions);
+            console.log(`This is result:`, result);
+            // setPredictions(result.prediction);
         } else {
             setError('Prediction failed');
         }
         } catch (err) {
-        setError(`Error: ${err.message}. Make sure the FastAPI server is running on localhost:8000`);
+            setError(`Error: ${err.message}. Make sure the FastAPI server is running on localhost:8000`);
         } finally {
-        setLoading(false);
+            setLoading(false);
         }
     }
 
