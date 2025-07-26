@@ -51,7 +51,8 @@ def root():
 @app.post("/predict")
 def predict():
 	return {
-		"prediction":"Testing food 101",
-		"success": False,
+		"prediction":class_names[0],
+		"success": True,
+		"confidence": 0.5,
 		"error": "Oh no"
     }

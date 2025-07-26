@@ -7,6 +7,8 @@ export default function ImgInput() {
     const [error, setError] = useState(null)
     const [preview, setPreview] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [prediction, setPrediction] = useState(null)
+    const [confidence, setConfidence] = useState(null)
     const fileInputRef = useRef(null);
 
     const handleUploadedFile = (event) => {
@@ -55,7 +57,8 @@ export default function ImgInput() {
         const result = await response.json();
         if (result.success) {
             console.log(`This is result:`, result);
-            // setPredictions(result.prediction);
+            setPrediction(result.prediction);
+            setConfidence(result.confidence)
         } else {
             setError('Prediction failed');
         }
@@ -83,24 +86,39 @@ export default function ImgInput() {
                 <button onClick={predictFood} disabled={!imgFile || loading}>Analyse</button>
             </div>
             <div className="outputContainer">
-                {loading ? (
-                  <div className="loader">
-                    <span style={{"--letter":1}}>A</span>
-                    <span style={{"--letter":2}}>N</span>
-                    <span style={{"--letter":3}}>A</span>
-                    <span style={{"--letter":4}}>L</span>
-                    <span style={{"--letter":5}}>Y</span>
-                    <span style={{"--letter":6}}>S</span>
-                    <span style={{"--letter":7}}>I</span>
-                    <span style={{"--letter":8}}>N</span>
-                    <span style={{"--letter":9}}>G</span>
-                    <span style={{"--letter":10}}>.</span>
-                    <span style={{"--letter":11}}>.</span>
-                    <span style={{"--letter":12}}>.</span>
-                  </div>
-                ) : (
-                  ''
+                {loading && (
+                     <div className="loader">
+                        <span style={{"--letter":1}}>A</span>
+                        <span style={{"--letter":2}}>N</span>
+                        <span style={{"--letter":3}}>A</span>
+                        <span style={{"--letter":4}}>L</span>
+                        <span style={{"--letter":5}}>Y</span>
+                        <span style={{"--letter":6}}>S</span>
+                        <span style={{"--letter":7}}>I</span>
+                        <span style={{"--letter":8}}>N</span>
+                        <span style={{"--letter":9}}>G</span>
+                        <span style={{"--letter":10}}>.</span>
+                        <span style={{"--letter":11}}>.</span>
+                        <span style={{"--letter":12}}>.</span>
+                    </div>
                 )}
+                {prediction && (
+                    <div className="resultContainer">
+                        <div className="predPanel">
+                            <div>The predicted food is ...</div>
+                            <div>{prediction}</div>
+                        </div>
+                        <div className="confPanel">
+                            <div>The confidence of this prediction is ...</div>
+                            <div>{confidence * 100}%</div>
+                        </div>
+                    </div>
+                )}
+                {confidence && confidence < 0.5 && (
+                    <div style={{"margin":"30px","border-bottom":"2px solid red"}}>
+                        Are you sure this is an image of a food? Or perhaps this food is not under one of the 101 classes of food we have here.
+                    </div>)
+                }
             </div>
         </>
        

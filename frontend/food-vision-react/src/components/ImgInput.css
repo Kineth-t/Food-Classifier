@@ -45,3 +45,18 @@ input {
     transform: translateY(5px);
   }
 }
+
+.resultContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px;
+  margin-bottom: 30px;
+}
+
+.resultContainer > div {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid black;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2)
+}
