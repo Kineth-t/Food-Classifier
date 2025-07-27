@@ -1,7 +1,13 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+import base64
+from io import BytesIO
+
+import numpy as np
+from PIL import Image
 import tensorflow as tf
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 class_names = [
     'Apple pie', 'Baby back ribs', 'Baklava', 'Beef carpaccio', 'Beef tartare', 'Beet salad',
@@ -23,13 +29,15 @@ class_names = [
     'Tacos', 'Takoyaki', 'Tiramisu', 'Tuna tartare', 'Waffles'
 ]
 
+class ImageData(BaseModel):
+    image: str # The base64 string of an image
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-	print("Loading model")
-	# model = tf.keras.models.load_model("")
-	yield
-	print("Fastapi app ending")
+    print("Loading model")
+    # model = tf.keras.models.load_model("")
+    yield
+    print("Fastapi app ending")
 
 app = FastAPI(lifespan=lifespan)
 
@@ -49,10 +57,37 @@ def root():
 	}
 
 @app.post("/predict")
-def predict():
-	return {
-		"prediction":class_names[0],
-		"success": True,
-		"confidence": 0.5,
-		"error": "Oh no"
-    }
+def predict(data: ImageData):
+    try:
+        # print("Raw image string length:", len(data.image))
+        # Extract the base64 string (remove the data:image/ part)
+        img_data = data.image.split(",")[1]  # Removing the "data:image/png;base64," part
+
+        # Decode the base64 string into bytes
+        img_bytes = base64.b64decode(img_data)
+
+        # Convert bytes into a file-like object (this is what PIL and TensorFlow expect)
+        # img = tf.image.decode_image(img_bytes)
+
+        # # Use PIL to open the image (this is optional, just for checking if the image is valid)
+        pil_img = Image.open(BytesIO(img_bytes)).convert("RGB") 
+        
+        # Further image processing...
+        img_array = np.array(pil_img) / 255.0
+        img_tensor = tf.cast(img_array, tf.float32)
+        img_tensor = tf.image.resize(img_tensor, [224, 224])  # Resizing image to model input size
+        print(img_tensor.shape)
+        print(img_tensor.dtype)
+
+        print(img_tensor)
+        # Pass image into model to classify it into one of the 101 food classes
+        # model.predict()
+        return {
+            "prediction":class_names[0],
+            "success": True,
+            "confidence": 0.5,
+            "error": "Oh no"
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error processing image: {e}")

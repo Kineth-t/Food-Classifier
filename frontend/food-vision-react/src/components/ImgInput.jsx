@@ -35,38 +35,44 @@ export default function ImgInput() {
 
         setLoading(true);
         setError(null);
-        // setPrediction(null);
 
-        const formData = new FormData()
-        formData.append('file', imgFile);
+        const reader = new FileReader()
 
-        try {
-        // Use environment variable or fallback to localhost
-        const API_URL = 'http://localhost:8000';
-        const response = await fetch(`${API_URL}/predict`, {
-            method: 'POST',
-            body: formData,
-        });
+        reader.onloadend = async () => {
+            console.log(reader.result)
+            const base64Image = reader.result; // data:image/jpeg;base64,...
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            try {
+            // Use environment variable or fallback to localhost
+                const API_URL = 'http://localhost:8000';
+                const response = await fetch(`${API_URL}/predict`, {
+                    method: 'POST',
+                    headers:
+                    {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ image: base64Image })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                if (result.success) {
+                    console.log(`This is result:`, result);
+                    setPrediction(result.prediction);
+                    setConfidence(result.confidence)
+                } else {
+                    setError('Prediction failed');
+                }
+            } catch (err) {
+                setError(`Error: ${err.message}. Make sure the FastAPI server is running on localhost:8000`);
+            } finally {
+                setLoading(false);
+            }
         }
-
-        console.log(`This is reponse:`, response);
-
-        const result = await response.json();
-        if (result.success) {
-            console.log(`This is result:`, result);
-            setPrediction(result.prediction);
-            setConfidence(result.confidence)
-        } else {
-            setError('Prediction failed');
-        }
-        } catch (err) {
-            setError(`Error: ${err.message}. Make sure the FastAPI server is running on localhost:8000`);
-        } finally {
-            setLoading(false);
-        }
+        reader.readAsDataURL(imgFile);1
     }
 
     return (
@@ -121,6 +127,5 @@ export default function ImgInput() {
                 }
             </div>
         </>
-       
     )
 }
