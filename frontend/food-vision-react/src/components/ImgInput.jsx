@@ -39,7 +39,7 @@ export default function ImgInput() {
         const reader = new FileReader()
 
         reader.onloadend = async () => {
-            console.log(reader.result)
+            // console.log(reader.result)
             const base64Image = reader.result; // data:image/jpeg;base64,...
 
             try {
@@ -72,7 +72,6 @@ export default function ImgInput() {
                 setLoading(false);
             }
         }
-        reader.readAsDataURL(imgFile);1
     }
 
     return (
