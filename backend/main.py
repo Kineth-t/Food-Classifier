@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 import base64
 from io import BytesIO
 
@@ -35,7 +35,8 @@ class ImageData(BaseModel):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("Loading model")
-    # model = tf.keras.models.load_model("")
+    app.state.model = tf.keras.models.load_model("./model/food_vision.keras", compile=False)
+    print("Model loaded")
     yield
     print("Fastapi app ending")
 
@@ -57,8 +58,10 @@ def root():
 	}
 
 @app.post("/predict")
-def predict(data: ImageData):
+def predict(data: ImageData, request: Request):
     try:
+        model = request.app.state.model  # ✅ access model here
+
         # print("Raw image string length:", len(data.image))
         # Extract the base64 string (remove the data:image/ part)
         img_data = data.image.split(",")[1]  # Removing the "data:image/png;base64," part
@@ -67,25 +70,30 @@ def predict(data: ImageData):
         img_bytes = base64.b64decode(img_data)
 
         # Convert bytes into a file-like object (this is what PIL and TensorFlow expect)
-        # img = tf.image.decode_image(img_bytes)
+        img = tf.image.decode_image(img_bytes, channels=3)
 
         # # Use PIL to open the image (this is optional, just for checking if the image is valid)
-        pil_img = Image.open(BytesIO(img_bytes)).convert("RGB") 
+        # pil_img = Image.open(BytesIO(img_bytes)).convert("RGB") 
         
         # Further image processing...
-        img_array = np.array(pil_img) / 255.0
-        img_tensor = tf.cast(img_array, tf.float32)
+        # img_array = np.array(img) / 255.0
+        img_tensor = tf.cast(img, tf.float32)
         img_tensor = tf.image.resize(img_tensor, [224, 224])  # Resizing image to model input size
-        print(img_tensor.shape)
-        print(img_tensor.dtype)
+        # print(img_tensor.shape)
+        # print(img_tensor.dtype)
+        # print(img_tensor)
 
-        print(img_tensor)
         # Pass image into model to classify it into one of the 101 food classes
-        # model.predict()
+        pred_prob = tf.squeeze(model.predict(tf.expand_dims(img_tensor, axis=0)))
+        print(pred_prob)
+        pred_class = class_names[tf.argmax(pred_prob)]
+        print(pred_class)
+        confidence = float(max(pred_prob))
+        print(confidence)
         return {
-            "prediction":class_names[0],
+            "prediction": pred_class,
             "success": True,
-            "confidence": 0.5,
+            "confidence": confidence,
             "error": "Oh no"
         }
 

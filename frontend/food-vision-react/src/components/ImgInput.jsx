@@ -72,6 +72,7 @@ export default function ImgInput() {
                 setLoading(false);
             }
         }
+        reader.readAsDataURL(imgFile);
     }
 
     return (
