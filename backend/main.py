@@ -85,17 +85,16 @@ def predict(data: ImageData, request: Request):
 
         # Pass image into model to classify it into one of the 101 food classes
         pred_prob = tf.squeeze(model.predict(tf.expand_dims(img_tensor, axis=0)))
-        print(pred_prob)
+        # print(pred_prob)
         pred_class = class_names[tf.argmax(pred_prob)]
-        print(pred_class)
-        confidence = float(max(pred_prob))
-        print(confidence)
+        # print(pred_class)
+        confidence = round(float(max(pred_prob)), 2)
+        # print(confidence)
         return {
             "prediction": pred_class,
             "success": True,
             "confidence": confidence,
-            "error": "Oh no"
         }
 
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Error processing image: {e}")
+        raise HTTPException(status_code=500, detail=f"Error processing image")

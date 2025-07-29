@@ -60,3 +60,11 @@ input {
   border: 2px solid black;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2)
 }
+
+.predPanel, .confPanel {
+  background:whitesmoke;
+}
+
+.analyseBtn:hover {
+  color:rgb(50, 50, 50)
+}

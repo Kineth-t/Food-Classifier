@@ -32,7 +32,8 @@ export default function ImgInput() {
             setError('Please select an image first.')
             return;
         }
-
+        setConfidence(null)
+        setPrediction(null)
         setLoading(true);
         setError(null);
 
@@ -55,7 +56,8 @@ export default function ImgInput() {
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
                 }
 
                 const result = await response.json();
@@ -64,10 +66,10 @@ export default function ImgInput() {
                     setPrediction(result.prediction);
                     setConfidence(result.confidence)
                 } else {
-                    setError('Prediction failed');
+                    setError(result.error);
                 }
             } catch (err) {
-                setError(`Error: ${err.message}. Make sure the FastAPI server is running on localhost:8000`);
+                setError(`Error: ${err.message}`)
             } finally {
                 setLoading(false);
             }
@@ -89,7 +91,7 @@ export default function ImgInput() {
                 }
                 <input ref={fileInputRef} type="file" accept='image/jpg, image/png' 
                 onChange={handleUploadedFile}/>
-                <button onClick={predictFood} disabled={!imgFile || loading}>Analyse</button>
+                <button onClick={predictFood} disabled={!imgFile || loading} className='analyseBtn'>Analyse</button>
             </div>
             <div className="outputContainer">
                 {loading && (
@@ -108,21 +110,22 @@ export default function ImgInput() {
                         <span style={{"--letter":12}}>.</span>
                     </div>
                 )}
+                {error && <p>{error}</p>}
                 {prediction && (
                     <div className="resultContainer">
                         <div className="predPanel">
                             <div>The predicted food is ...</div>
-                            <div>{prediction}</div>
+                            <div style={{color:"red"}}>{prediction}</div>
                         </div>
                         <div className="confPanel">
                             <div>The confidence of this prediction is ...</div>
-                            <div>{confidence * 100}%</div>
+                            <div style={{color:"red"}}>{confidence * 100}%</div>
                         </div>
                     </div>
                 )}
                 {confidence && confidence < 0.5 && (
                     <div style={{"margin":"30px","border-bottom":"2px solid red"}}>
-                        Are you sure this is an image of a food? Or perhaps this food is not under one of the 101 classes of food we have here.
+                       Confidence is low. Maybe it's correct, maybe it's not one of the 101 classes of food. Or is it even a food?
                     </div>)
                 }
             </div>
