@@ -15,7 +15,7 @@ function App() {
 			<div className="introContainer">	
 				<h3>This is a computer vision food classification model build with TensorFlow.</h3>
 				<h3>The uploaded image will be classified into one of the 101 classes of foods in this model.</h3>
-				<h5><b>Disclaimer:</b> This model has an accuracy of xx.x% and its just meant to be a fun project that I made</h5>
+				<h5><b>Disclaimer:</b> This model has an accuracy of 77.9% and its just meant to be a fun project that I made</h5>
 			</div>
 			<ImgInput />
 		</>

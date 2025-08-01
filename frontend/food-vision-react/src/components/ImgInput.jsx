@@ -45,7 +45,7 @@ export default function ImgInput() {
 
             try {
             // Use environment variable or fallback to localhost
-                const API_URL = 'http://localhost:8000';
+                const API_URL = import.meta.env.VITE_FASTAPI_BACKEND_API;
                 const response = await fetch(`${API_URL}/predict`, {
                     method: 'POST',
                     headers:
