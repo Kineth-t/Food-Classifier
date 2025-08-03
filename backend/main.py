@@ -88,7 +88,8 @@ def predict(data: ImageData, request: Request):
         # print(pred_prob)
         pred_class = class_names[tf.argmax(pred_prob)]
         # print(pred_class)
-        confidence = round(float(max(pred_prob)), 2)
+        print(round(float(max(pred_prob)), 4))
+        confidence = round(float(max(pred_prob)), 4)
         # print(confidence)
         return {
             "prediction": pred_class,
