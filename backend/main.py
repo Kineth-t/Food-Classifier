@@ -45,7 +45,7 @@ app = FastAPI(lifespan=lifespan)
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://food-classifier-sage.vercel.app/"],
+    allow_origins=["https://food-classifier-sage.vercel.app", "https://food-classifier-gpb4xbq2c-kineths-projects.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
