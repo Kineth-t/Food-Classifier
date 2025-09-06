@@ -1,11 +1,9 @@
 services:
   - type: web
-    name: food-classifier
+    name: food-classifier-backend
     env: python
-    python_version: 3.11           # Specify Python 3.11
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn main:app  # Replace with your start command if needed
-    regions:
-      - singapore
-    autoDeploy: true                # Automatically deploy when changes are pushed
-    branch: main                    # Specify the branch to deploy from (default: main)
+    plan: free
+    region: singapore
+    python_version: 3.11  # Explicitly set Python 3.11
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port 10000"
