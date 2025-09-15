@@ -35,7 +35,8 @@ class ImageData(BaseModel):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     print("Loading model")
-    app.state.model = tf.keras.models.load_model("./model/food_vision.keras", compile=False)
+    # app.state.model = tf.keras.models.load_model("./model/food_vision.keras", compile=False)
+    app.state.model = tf.keras.models.load_model("/usr/backend/model/food_vision.keras", compile=False)
     print("Model loaded")
     yield
     print("Fastapi app ending")
