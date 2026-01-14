@@ -61,7 +61,7 @@ def root():
 @app.post("/predict")
 def predict(data: ImageData, request: Request):
     try:
-        model = request.app.state.model  # ✅ access model here
+        model = request.app.state.model  # Access model here
 
         # print("Raw image string length:", len(data.image))
         # Extract the base64 string (remove the data:image/ part)
